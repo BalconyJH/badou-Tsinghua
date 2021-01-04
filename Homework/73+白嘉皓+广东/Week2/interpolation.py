@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
-# Time:31/12/2020 11:11 am
+# Time:4/01/2021 5:12 pm
 # Author:BalconyJH
 # Site:
-# File:bilinear_interpolation.py
-# Version:1.0
+# File:interpolation.py
+# Version:1.1
+
+
+# bilinear interpolation
 import cv2
 import numpy as np
-def func(img,out_dim):
+
+def func(img, out_dim):
     src_h, src_w, channel = img.shape
     dst_h, dst_w = out_dim[1], out_dim[0]
     print("src_h, src_w = ", src_h, src_w)
@@ -33,9 +37,35 @@ def func(img,out_dim):
 
     return dst_img
 
+
 if __name__ == '__main__':
     img = cv2.imread('thumbsup.jpg')
-    dst = func(img,(1024,1024))
-    cv2.imshow('bilinear interp',dst)
+    dst = func(img, (1024, 1024))
+    cv2.imshow('bilinear interp', dst)
     cv2.imwrite("1.png", dst)
     cv2.waitKey()
+
+'''
+#NN interpolation
+from PIL import Image
+import matplotlib.pyplot as plt
+import numpy as np 
+import math
+
+def NN_interpolation(img,dstH,dstW):
+    scrH,scrW,_=img.shape
+    retimg=np.zeros((dstH,dstW,3),dtype=np.uint8)
+    for i in range(dstH-1):
+        for j in range(dstW-1):
+            scrx=round(i*(scrH/dstH))
+            scry=round(j*(scrW/dstW))
+            retimg[i,j]=img[scrx,scry]
+    return retimg
+
+im_path='../paojie.jpg'
+image=np.array(Image.open(im_path))
+
+image1=NN_interpolation(image,image.shape[0]*2,image.shape[1]*2)
+image1=Image.fromarray(image1.astype('uint8')).convert('RGB')
+image1.save('out.png')
+'''
